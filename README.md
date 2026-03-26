@@ -7,7 +7,7 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
 > **PES** = Patabuga Enterprise System / Personal Ecosystem  
-> Ekosistem teknologi enterprise untuk infrastruktur cloud-native, otomatisasi, dan layanan AI.
+> Enterprise technology ecosystem for cloud-native infrastructure, AI/ML, and automation.
 
 ---
 
@@ -17,20 +17,19 @@
 2. [Architecture](#architecture)
 3. [Technology Stack](#technology-stack)
 4. [Key Projects](#key-projects)
-5. [Security & Compliance](#security--compliance)
-6. [Workflow](#workflow)
-7. [ISO 27001 Compliance](#iso-27001-compliance)
-8. [Contact](#contact)
+5. [Security](#security)
+6. [ISO 27001 Compliance](#iso-27001-compliance)
+7. [Contact](#contact)
 
 ---
 
 ## About
 
-**Patabuga Enterprises System (PES)** is an enterprise technology ecosystem developed to manage cloud-native infrastructure, business process automation, and AI services holistically with **Zero Trust Security** principles and **ISO 27001** compliance.
+**Patabuga Enterprises System (PES)** is an enterprise technology ecosystem for managing cloud-native infrastructure, business process automation, and AI services with **Zero Trust Security** and **ISO 27001** compliance.
 
 ### Mission
 
-> Building secure, scalable, and audit-ready technology infrastructure for enterprise operations with Infrastructure as Code approach and Security by Design principles.
+> Building secure, scalable, and audit-ready technology infrastructure with Infrastructure as Code and Security by Design principles.
 
 ---
 
@@ -39,93 +38,64 @@
 ### System Overview
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '12px'}}}%%
 flowchart TB
-    subgraph Cloud["☁️ Cloud Infrastructure"]
-        subgraph CF["Cloudflare"]
-            ZT[Zero Trust<br/>Access]
-            WORKERS[Workers<br/>Pages]
-            DNS[DNS<br/>Gateway]
-        end
-        
-        subgraph AZ["Microsoft Azure"]
-            COSMOS[Cosmos DB]
-            VMs[Virtual<br/>Machines]
-        end
-        
-        subgraph GCP["Google Cloud Platform"]
-            COMPUTE[Compute<br/>Engine]
-        end
+    subgraph Cloud["☁️ Cloud"]
+        direction LR
+        CF["Cloudflare"]:::cf
+        AZ["Azure"]:::az
+        GCP["GCP"]:::gcp
     end
 
-    subgraph Platform["⚙️ Platform Layer"]
-        TF[Terraform<br/>IaC]
-        GH[GitHub<br/>Actions]
-        N8[n8n<br/>Automation]
-        VAULT[Vault<br/>Secrets]
+    subgraph Platform["⚙️ Platform"]
+        TF["Terraform"]:::tf
+        GH["GitHub Actions"]:::gh
+        N8["n8n"]:::n8
     end
 
-    subgraph Apps["📱 Application Layer"]
-        WEB[Web<br/>Applications]
-        AI[AI/ML<br/>Services]
-        API[REST<br/>APIs]
-        SSO[SSO<br/>Portal]
+    subgraph Apps["📱 Applications"]
+        WEB["Web"]:::app
+        AI["AI/ML"]:::ai
+        SSO["SSO"]:::sso
     end
 
-    subgraph Security["🔐 Security Layer"]
-        AUDIT[Audit<br/>Logs]
-        IAM[Identity<br/>Access]
-        COMPLY[Compliance<br/>Controls]
+    subgraph Security["🔐 Security"]
+        AUDIT["Audit"]:::audit
+        IAM["IAM"]:::iam
     end
 
     Cloud <--> Platform
     Platform <--> Apps
     Apps --> Security
-    Security --> AUDIT
-    
-    style Security fill:#ff6b6b,color:#fff
-    style Cloud fill:#74b9ff,color:#fff
-    style Platform fill:#a29bfe,color:#fff
-    style Apps fill:#55efc4,color:#000
+
+    classDef cf fill:#f38020,color:#fff
+    classDef az fill:#0078d4,color:#fff
+    classDef gcp fill:#4285f4,color:#fff
+    classDef tf fill:#7b42bc,color:#fff
+    classDef gh fill:#2088ff,color:#fff
+    classDef n8 fill:#ea4d4d,color:#fff
+    classDef app fill:#55efc4,color:#000
+    classDef ai fill:#a29bfe,color:#fff
+    classDef sso fill:#74b9ff,color:#000
+    classDef audit fill:#00b894,color:#fff
+    classDef iam fill:#fdcb6e,color:#000
 ```
 
-### Data Flow Architecture
+### CI/CD Flow
 
 ```mermaid
+%%{init: {'theme': 'base'}}%%
 flowchart LR
-    subgraph Source["📤 Source"]
-        DEV[Developer]
-        CI[CI/CD Pipeline]
-    end
-
-    subgraph IaC["🏗️ Infrastructure as Code"]
-        TF[Terraform]
-        PLAN[Plan & Validate]
-        STATE[State<br/>Management]
-    end
-
-    subgraph Deploy["🚀 Deployment"]
-        APPLY[Terraform<br/>Apply]
-        VERIFY[Verification]
-        NOTIFY[Notify]
-    end
-
-    subgraph Audit["📋 Audit Trail"]
-        LOGS[Operation<br/>Logs]
-        COMPLIANCE[Compliance<br/>Check]
-    end
-
-    DEV --> CI
-    CI --> TF
-    TF --> PLAN
-    PLAN --> STATE
-    STATE --> APPLY
-    APPLY --> VERIFY
-    VERIFY --> NOTIFY
-    NOTIFY --> LOGS
-    LOGS --> COMPLIANCE
+    A[Code] --> B[PR]
+    B --> C[Test]
+    C --> D[Lint]
+    D --> E[Scan]
+    E --> F[Plan]
+    F --> G[Apply]
+    G --> H[Verify]
     
-    style IaC fill:#623CE4,color:#fff
-    style Audit fill:#00b894,color:#fff
+    style C fill:#00b894,color:#fff
+    style G fill:#623CE4,color:#fff
 ```
 
 ---
@@ -134,42 +104,21 @@ flowchart LR
 
 ### Cloud Providers
 
-| Provider | Services | Region |
-|----------|----------|--------|
-| **Cloudflare** | Zero Trust, Workers, Pages, DNS, R2, D1 | Global Edge |
-| **Microsoft Azure** | Cosmos DB, Virtual Machines, Azure AD | Global |
-| **Google Cloud Platform** | Compute Engine | us-east1 |
+| Provider | Services |
+|----------|----------|
+| **Cloudflare** | Zero Trust, Workers, Pages, DNS, R2, D1 |
+| **Azure** | Cosmos DB, VMs, AD |
+| **GCP** | Compute Engine |
 
-### Platform & Tools
+### Tools
 
-```mermaid
-mindmap
-  root((PES Stack))
-    Infrastructure
-      Terraform
-      GitHub Actions
-      Cloudflare TF Provider
-    Security
-      Cloudflare Zero Trust
-      WARP Client
-      MFA/SSO
-    Data
-      Azure Cosmos DB
-      Cloudflare D1
-      Cloudflare R2
-    AI/ML
-      Gemini API
-      RAG Pipeline
-      Vector DB
-    Automation
-      n8n Workflows
-      GitHub Actions
-      Cron Jobs
-    Observability
-      Cloudflare Analytics
-      Azure Monitor
-      Audit Logs
-```
+| Category | Tools |
+|----------|-------|
+| IaC | Terraform |
+| CI/CD | GitHub Actions |
+| Automation | n8n |
+| Security | Cloudflare Zero Trust, WARP |
+| AI/ML | Gemini, RAG, Vector DB |
 
 ---
 
@@ -177,198 +126,101 @@ mindmap
 
 ### 🔐 Security & Identity
 
-| Project | Description | Link |
-|---------|-------------|------|
-| **zero-trust-network** | Zero-Trust Network Architecture with Tailscale, WireGuard, and Cloudflare | [GitHub](https://github.com/vspatabuga/zero-trust-network) |
-| **pes-sso** | SSO Module with Cloudflare Access integration | Private |
+| Project | Description |
+|---------|-------------|
+| **zero-trust-network** | Zero-Trust Network Architecture |
+| **pes-sso** | SSO with Cloudflare Access |
 
-### 🏗️ Infrastructure as Code
+### 🏗️ Infrastructure
 
-| Project | Description | Link |
-|---------|-------------|------|
-| **sovereign-cloud-fabric** | Multi-Cloud Terraform Orchestration | [GitHub](https://github.com/vspatabuga/sovereign-cloud-fabric) |
-| **pes-infrastructure** | Core Infrastructure with Terraform | Private |
+| Project | Description |
+|---------|-------------|
+| **sovereign-cloud-fabric** | Multi-Cloud Terraform |
+| **pes-infrastructure** | Core Infrastructure (Private) |
 
 ### 🤖 AI & Intelligence
 
-| Project | Description | Link |
-|---------|-------------|------|
-| **ai-governance-orchestrator** | AI Governance Engine with OpenClaw and Arize Phoenix | [GitHub](https://github.com/vspatabuga/ai-governance-orchestrator) |
-| **pes-cortex-engine** | AI Engine with RAG and Vector DB | Private |
+| Project | Description |
+|---------|-------------|
+| **ai-governance-orchestrator** | AI Governance Engine |
+| **pes-cortex-engine** | AI with RAG (Private) |
 
 ### ⚡ Automation
 
-| Project | Description | Link |
-|---------|-------------|------|
-| **pes-production-engine** | Automated Content Production with n8n for 8 websites | [GitHub](https://github.com/vspatabuga/pes-production-engine) |
-| **pes-research-panel** | Research Panel with Azure VM integration | Private |
+| Project | Description |
+|---------|-------------|
+| **pes-production-engine** | Content Production (n8n) |
+| **pes-research-panel** | Research Panel (Private) |
 
 ### 🌐 Web & Blockchain
 
-| Project | Description | Link |
-|---------|-------------|------|
-| **evote-blockchain-dapps** | Decentralized Voting Application with Ethereum Smart Contracts | [GitHub](https://github.com/vspatabuga/evote-blockchain-dapps) |
-| **kalpataru-backend-configuration** | Backend Configuration for Waste Management System | [GitHub](https://github.com/vspatabuga/kalpataru-backend-configuration) |
+| Project | Description |
+|---------|-------------|
+| **evote-blockchain-dapps** | Decentralized Voting dApp |
+| **kalpataru-backend-configuration** | Waste Management Backend |
 
 ---
 
-## Security & Compliance
+## Security
 
-### Zero Trust Security Model
+### Zero Trust Model
 
 ```mermaid
+%%{init: {'theme': 'base'}}%%
 flowchart TD
-    START[User Access] --> AUTH[Authentication]
-    AUTH --> MFA{MFA Verified?}
-    MFA -->|No| DENY[Access Denied]
-    MFA -->|Yes| DEVICE{Device Posture?}
-    DEVICE -->|Failed| DENY
-    DEVICE -->|Pass| POLICY{Policy Check}
-    POLICY -->|Not Allowed| DENY
-    POLICY -->|Allowed| LOG[Log Access]
-    LOG --> GRANT[Access Granted]
-    GRANT --> SESSION[Create Session]
-    SESSION --> MONITOR[Continuous Monitoring]
-    MONITOR -->|Anomaly| REVOKE[Revoke Access]
-    MONITOR -->|Normal| SESSION
+    A[Access] --> B[Auth]
+    B --> C{ MFA }
+    C -->|No| D[Denied]
+    C -->|Yes| E{ Device }
+    E -->|Fail| D
+    E -->|Pass| F{ Policy }
+    F -->|Block| D
+    F -->|Allow| G[Grant]
+    G --> H[Monitor]
+    H -->|Alert| I[Revoke]
+    H -->|OK| H
     
-    style AUTH fill:#fdcb6e,color:#000
-    style MFA fill:#fdcb6e,color:#000
-    style GRANT fill:#00b894,color:#fff
-    style DENY fill:#d63031,color:#fff
-    style MONITOR fill:#74b9ff,color:#000
+    style A fill:#74b9ff
+    style B fill:#fdcb6e
+    style G fill:#00b894,color:#fff
+    style D fill:#d63031,color:#fff
 ```
 
-### Security Controls (ISO 27001)
+### Key Controls
 
-| Control ID | Description | Implementation |
-|------------|-------------|----------------|
-| A.9.1 | Business requirements of access control | Cloudflare Zero Trust |
-| A.9.2 | User access management | GitHub Teams + SSO |
-| A.9.4 | System and application access control | Zero Trust Network |
-| A.12.4.1 | Event logging | Cloudflare Logpush + Audit Logs |
-| A.14.2.1 | Security in development | Terraform + GitHub Actions |
-| A.18.1.1 | Identification of applicable legislation | Internal Policy |
-
----
-
-## Workflow
-
-### CI/CD Pipeline
-
-```mermaid
-flowchart LR
-    subgraph Development
-        CODE[Code Change]
-        PR[Pull Request]
-    end
-
-    subgraph CI["CI Pipeline"]
-        TEST[Automated Tests]
-        LINT[Linting]
-        SCAN[Security Scan]
-    end
-
-    subgraph CD["CD Pipeline"]
-        PLAN[Terraform Plan]
-        APPROVE[Manual Approve]
-        APPLY[Terraform Apply]
-    end
-
-    subgraph Verification
-        VERIFY[Verify Deploy]
-        NOTIFY[Notify Team]
-    end
-
-    CODE --> PR
-    PR --> TEST
-    TEST --> LINT
-    LINT --> SCAN
-    SCAN --> PLAN
-    PLAN --> APPROVE
-    APPROVE --> APPLY
-    APPLY --> VERIFY
-    VERIFY --> NOTIFY
-    
-    style CI fill:#623CE4,color:#fff
-    style CD fill:#00b894,color:#fff
-```
+| Control | Implementation |
+|---------|----------------|
+| A.9.1 | Cloudflare Zero Trust |
+| A.9.2 | GitHub Teams + SSO |
+| A.9.4 | Zero Trust Network |
+| A.12.4.1 | Cloudflare Logpush |
+| A.14.2.1 | Terraform + GitHub Actions |
 
 ---
 
 ## ISO 27001 Compliance
 
-### Commitment to Information Security
+### Commitment
 
-Patabuga Enterprises System is committed to implementing and maintaining an Information Security Management System (ISMS) compliant with **ISO/IEC 27001:2022**.
+Patabuga Enterprises System implements **ISO/IEC 27001:2022** Information Security Management System.
 
-### Key Compliance Areas
+### Control Domains
 
-| Domain | Control | Status |
-|--------|---------|--------|
-| **A.5** | Information Security Policies | ✅ Implemented |
-| **A.6** | Organization of Information Security | ✅ Implemented |
-| **A.7** | Human Resource Security | ✅ Implemented |
-| **A.8** | Asset Management | ✅ Implemented |
-| **A.9** | Access Control | ✅ Implemented |
-| **A.10** | Cryptography | ✅ Implemented |
-| **A.11** | Physical and Environmental Security | ✅ Cloud Provider |
-| **A.12** | Operations Security | ✅ Implemented |
-| **A.13** | Communications Security | ✅ Implemented |
-| **A.14** | System Acquisition, Development, Maintenance | ✅ Implemented |
-| **A.15** | Supplier Relationships | ⚠️ Partial |
-| **A.16** | Information Security Incident Management | ✅ Implemented |
-| **A.17** | Business Continuity | ⚠️ In Progress |
-| **A.18** | Compliance | ✅ Implemented |
+| Domain | Status |
+|--------|--------|
+| A.5-A.10 | ✅ Implemented |
+| A.11 | ✅ Cloud Provider |
+| A.12-A.14 | ✅ Implemented |
+| A.15 | ⚠️ Partial |
+| A.16-A.18 | ✅ Implemented |
 
 ### Audit Trail
 
-```mermaid
-flowchart TB
-    subgraph Sources["📤 Change Sources"]
-        PUSH[Git Push]
-        PR_MERGE[PR Merge]
-        MANUAL[Manual Run]
-    end
-
-    subgraph Tracking["📝 Tracking"]
-        COMMIT[Commit Log]
-        PR_INFO[PR Info]
-        ACTIONS[GitHub Actions]
-    end
-
-    subgraph Storage["💾 Storage"]
-        TERRAFORM[Terraform State]
-        LOGS[Cloudflare Logs]
-        KV[KV Store]
-    end
-
-    subgraph Review["👁️ Review"]
-        AUDIT[Audit Report]
-        COMPLIANCE[Compliance Check]
-    end
-
-    PUSH --> COMMIT
-    PR_MERGE --> PR_INFO
-    MANUAL --> ACTIONS
-    COMMIT --> TERRAFORM
-    PR_INFO --> ACTIONS
-    ACTIONS --> LOGS
-    LOGS --> KV
-    TERRAFORM --> AUDIT
-    LOGS --> AUDIT
-    KV --> AUDIT
-    AUDIT --> COMPLIANCE
-```
-
-### Traceability
-
-All infrastructure and operational changes are documented in:
-
-- **Git History** — Every code change is documented
-- **Terraform State** — State file for infrastructure audit
-- **Cloudflare Logpush** — Security activity logs
-- **GitHub Actions** — Pipeline execution logs
+All changes documented in:
+- **Git History** — Code changes
+- **Terraform State** — Infrastructure state
+- **Cloudflare Logs** — Security events
+- **GitHub Actions** — Pipeline execution
 
 ---
 
@@ -376,21 +228,19 @@ All infrastructure and operational changes are documented in:
 
 | Metric | Value |
 |--------|-------|
-| Public Repositories | 12+ |
-| Cloud Providers | 3 (Cloudflare, Azure, GCP) |
-| Total Projects | 20+ |
-| ISO 27001 Controls | 14 Domains |
+| Cloud Providers | 3 |
+| Projects | 20+ |
 | Compliance Score | 93% |
 
 ---
 
 ## Contact
 
-| Channel | Information |
-|---------|-------------|
+| Channel | URL |
+|---------|-----|
 | 🌐 Website | [patabuga.co](https://patabuga.co) |
 | 📧 Email | hq@patabuga.co |
-| 📚 Documentation | [vsp-docs](https://github.com/vspatabuga/vsp-docs) |
+| 📚 Docs | [vsp-docs](https://github.com/vspatabuga/vsp-docs) |
 | 🔒 Security | security@patabuga.co |
 
 ---
@@ -401,5 +251,5 @@ Individual projects have their own licenses. Default: **MIT License**.
 
 ---
 
-*🏢 Patabuga Enterprises System — Building Secure, Scalable, and Audit-Ready Infrastructure*  
-*🔒 Compliant with ISO/IEC 27001:2022*
+*🏢 Patabuga Enterprises System — Secure, Scalable, Audit-Ready*  
+*🔒 ISO/IEC 27001:2022 Compliant*
